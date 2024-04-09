@@ -5,11 +5,7 @@
         <cardpic />
     </div>
     <div>
-        <v-skeleton-loader type="article">
-            <h1>Hi 👋🏻 <br /><span class="font-weight-light">I'am Nurarat Sangreuang</span></h1>
-            <span class="font-weight-bold">About me</span><br />
-            <span class="" style="color: grey;text-transform:lowercase">Hi I'm Bam Graguated from Burapa University with a Bachelor Degree <br />of Science in Information Techbology</span>
-        </v-skeleton-loader>
+       <aboutme/>
     </div>
 </div>
 <v-divider class="mt-8"></v-divider>
@@ -19,10 +15,13 @@
 </template>
 
 <script>
-import cardpic from "../components/PictureCard.vue";
+import cardpic from "../components/MePage/PictureCard.vue";
+import aboutme from "../components/MePage/AboutMe.vue";
+
 export default {
     components: {
-        cardpic
+        cardpic,
+        aboutme
     }
 };
 </script>
