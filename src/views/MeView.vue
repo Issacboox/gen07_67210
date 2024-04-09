@@ -8,20 +8,25 @@
        <aboutme/>
     </div>
 </div>
-<v-divider class="mt-8"></v-divider>
-<!-- Another content -->
 
+<!-- Another content -->
+<div class="d-flex justify-center align-center mt-8">
+<tabme/>
+</div>
 </div>
 </template>
 
 <script>
 import cardpic from "../components/MePage/PictureCard.vue";
 import aboutme from "../components/MePage/AboutMe.vue";
+import tabme from "../components/MePage/TabMe.vue";
+
 
 export default {
     components: {
         cardpic,
-        aboutme
+        aboutme,
+        tabme
     }
 };
 </script>
