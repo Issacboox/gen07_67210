@@ -3,7 +3,7 @@
     <v-app-bar app color="white" :elevation="0" >
       <div class="d-flex align-center">
       </div>
-      <h4 class="text-nav">Nura S.</h4>
+      <h4 class="text-nav">WorkShop</h4>
       <v-spacer></v-spacer>
     </v-app-bar>
     <v-main>
