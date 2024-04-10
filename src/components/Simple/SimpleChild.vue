@@ -7,11 +7,13 @@
 </template>
 
 <script>
+import { EventBus } from '../../EventBus';
 export default {
   props: ["name"],
   methods:{
     callMain(){
-      this.$emit('displayAlert')
+      // this.$emit('displayAlert')
+      EventBus.$emit('request_action')
     }
   }
 };

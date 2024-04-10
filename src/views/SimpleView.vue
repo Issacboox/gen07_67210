@@ -32,6 +32,7 @@
 </template>
 
 <script>
+import { EventBus } from '@/EventBus';
 import simchild from '../components/Simple/SimpleChild.vue';
 
 export default {
@@ -57,6 +58,12 @@ export default {
                 img: require('../assets/beans.png')
             }]
         }
+    },
+    mounted(){
+        EventBus.$on('request_action', this.displayAlert)
+    },
+    beforeDestroy(){
+        EventBus.$off('request_action', this.displayAlert)
     },
     methods: {
         displayAlert() {
