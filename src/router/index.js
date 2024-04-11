@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import Login from '@/views/Auth/Login.vue'
+import Register from '@/views/Auth/Register.vue'
 // import { component } from 'vue/types/umd'
 
 Vue.use(VueRouter)
@@ -11,7 +13,7 @@ const routes = [
     name: 'home',
     component: HomeView
   },
-  
+
   {
     path:'',
     name:'toolbar',
@@ -21,6 +23,16 @@ const routes = [
         path:'/me',
         name:'me',
         component: () => import('../views/MeView.vue')
+      },
+      {
+        path: '/login',
+        name: 'login',
+        component: Login
+      },
+      {
+        path: '/register',
+        name: 'register',
+        component: Register
       },
       {
         path:'/apicon',
