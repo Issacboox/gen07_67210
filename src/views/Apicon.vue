@@ -1,35 +1,36 @@
 <template>
-  <div class="p-5" style="padding: 20px 0px 0px 50px">
+  <div class="container" >
     <!-- <h2 class="mb-4"></h2> -->
     <v-row>
-      <v-col cols="12">
+      <v-col cols="12" class="d-flex" style="gap: 20px;">
+        <v-btn color="info" href="/pos">Back</v-btn>
         <v-btn color="success" @click="newItem()">NewItem</v-btn>
       </v-col>
       <v-col
-        cols="6"
+        cols="4"
         sm="6"
         lg="2"
-        md="4"
+        md="3"
         v-for="(items, index) in apidata"
         :key="index"
       >
-        <v-card width="400">
-          <v-img src="../assets//gojo.jpg" height="300" />
+        <v-card width="350" class="rounded-xl">
+          <v-img :src="items.img_url" height="220" />
           <v-card-title>
-            Username : {{ items.username }}
+            {{ items.prod_name }}
             <br />
-            First Name : {{ items.firstName }}
+            Price : {{ items.price }}
             <br />
-            Last Name : {{ items.lastName }}
+            Stock : {{ items.stock }}
             <br />
-            Email : {{ items.email }}
-            <br />
-            Role : {{ items.role }}
           </v-card-title>
-          <v-card-actions>
+          <v-card-actions class="d-flex items-center justify-center me-7">
             <v-spacer></v-spacer>
-            <v-btn class="mb-4 me-4" color="warning" @click="editItem(items)"
+            <v-btn width="40%" color="warning" @click="editItem(items)"
               >Edit</v-btn
+            >
+            <v-btn width="40%" color="error" @click="saveDelData(items._id)"
+              >delete</v-btn
             >
           </v-card-actions>
         </v-card>
@@ -42,29 +43,31 @@
           <v-row>
             <v-col>
               <v-text-field
-                name="username"
-                label="Username"
-                v-model="postdata.username"
+                name="prod_name"
+                label="Product Name"
+                v-model="postdata.prod_name"
               ></v-text-field>
               <v-text-field
-                name="password"
-                label="Password"
-                v-model="postdata.password"
+                name="price"
+                label="Price"
+                v-model="postdata.price"
               ></v-text-field>
               <v-text-field
-                name="firstName"
-                label="First Name"
-                v-model="postdata.firstName"
+                name="Oldstock"
+                :disabled="isOldStockDisabled"
+                label="Current Stock"
+                v-model="postdata.stock"
+              ></v-text-field>
+
+              <v-text-field
+                name="stock"
+                label="Add Stock"
+                v-model="postdata.stock"
               ></v-text-field>
               <v-text-field
-                name="lastName"
-                label="Last Name"
-                v-model="postdata.lastName"
-              ></v-text-field>
-              <v-text-field
-                name="email"
-                label="Email"
-                v-model="postdata.email"
+                name="img_url"
+                label="Image URL"
+                v-model="postdata.img_url"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -72,8 +75,50 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn text color="error" @click="closeDialog()">cancel</v-btn>
-          <v-btn text color="info" @click="saveSelect()">save</v-btn>
-          <v-btn color="error" @click="saveDelData(item._id)">delete</v-btn>
+          <v-btn text color="info" @click="savePutData()">save</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="dialogadd" max-width="500">
+      <v-card>
+        <v-card-title> Add Product </v-card-title>
+        <v-card-text>
+          <v-row>
+            <v-col>
+              <v-text-field
+                name="prod_name"
+                label="Product Name"
+                v-model="postdata.prod_name"
+              ></v-text-field>
+              <v-text-field
+                name="price"
+                label="Price"
+                v-model="postdata.price"
+              ></v-text-field>
+              <v-text-field
+                name="Oldstock"
+                :disabled="isOldStockDisabled"
+                label="Current Stock"
+                v-model="postdata.stock"
+              ></v-text-field>
+
+              <v-text-field
+                name="stock"
+                label="Add Stock"
+                v-model="postdata.stock"
+              ></v-text-field>
+              <v-text-field
+                name="img_url"
+                label="Image URL"
+                v-model="postdata.img_url"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn text color="error" @click="closeDialog()">cancel</v-btn>
+          <v-btn text color="info" @click="savePostData()">Create</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -87,22 +132,22 @@ export default {
     return {
       id: "",
       dialogedit: false,
+      dialogadd:false,
+      isOldStockDisabled: true,
       apidata: [],
       postdata: {
         // use to post data
-        username: "",
-        password: "",
-        firstName: "",
-        lastName: "",
-        email: "",
+        prod_name: "",
+        price: "",
+        stock: "",
+        img_url: "",
       },
       postdefault: {
         // clear post data after submit
-        username: "",
-        password: "",
-        firstName: "",
-        lastName: "",
-        email: "",
+        prod_name: "",
+        price: "",
+        stock: "",
+        img_url: "",
       },
     };
   },
@@ -116,14 +161,13 @@ export default {
   },
   methods: {
     newItem() {
-      this.id = "";
-      this.postdata = {
-        ...this.postdefault,
-      };
-      this.dialogedit = true;
+      this.id = ""; // Clear the id
+      this.postdata = { ...this.postdefault }; // Reset postdata to default values
+      this.dialogadd = true; // Show the dialog
     },
+
     editItem(item) {
-      this.id = item.id;
+      this.id = item._id; // Assuming your item object has an _id property
       this.postdata = {
         ...item,
       };
@@ -142,50 +186,58 @@ export default {
       } else alert("new item");
     },
     getData() {
-      this.axios.get("http://localhost:3000/users").then((response) => {
+      this.axios.get("http://localhost:3000/products").then((response) => {
         console.log("data from api", response.data);
-        this.apidata = response.data.data;
+        this.apidata = response.data;
       });
     },
-    async savePostData(){
+    async savePostData() {
       try {
-        const { data } = await this.axios.post("http://localhost:3000/register", this.postdata)
-        console.log(data)
-        alert("success")
-        this.getData()
-        this.closeDialog()
+        const { data } = await this.axios.post(
+          "http://localhost:3000/products",
+          this.postdata
+        );
+        console.log(data);
+        alert("success");
+        this.getData();
+        this.closeDialog();
       } catch (error) {
-        console.log(error)
-        alert('err!!')
+        console.log(error);
+        alert("err!!");
       }
     },
-    async savePutData(){
+    async savePutData() {
       try {
-        const { data } = await this.axios.put("http://localhost:3000/users", this.postdata)
-        console.log(data)
-        alert("update success")
-        this.getData()
-        this.closeDialog()
+        const { data } = await this.axios.put(
+          "http://localhost:3000/products/" + this.id,
+          this.postdata // send the updated data
+        );
+        console.log(data);
+        alert("update success");
+        this.getData();
+        this.closeDialog();
       } catch (error) {
-        console.log(error)
-        alert('err!!')
+        console.log(error);
+        alert("err!!");
+      }
+    },
+    async saveDelData(id) {
+      if (confirm("Delete?")) {
+        try {
+          const { data } = await this.axios.delete(
+            "http://localhost:3000/products/" + id
+          );
+          console.log(data);
+          alert("delete success");
+          this.getData();
+          this.closeDialog();
+        } catch (error) {
+          console.log(error);
+          alert("err!!");
+        }
       }
     },
   },
-  async saveDelData(item){
-    if(confirm("Delete?")){
-    try {
-      const { data } = await this.axios.delete("http://localhost:3000/users/"+item)
-        console.log(data)
-        alert("delete success")
-        this.getData()
-        this.closeDialog()
-    } catch (error) {
-      console.log(error)
-        alert('err!!')
-    }
-  }
-}
 };
 </script>
 

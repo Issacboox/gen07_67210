@@ -3,6 +3,8 @@ import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import Login from '@/views/Auth/Login.vue'
 import Register from '@/views/Auth/Register.vue'
+import Pos from '@/views/POS/MainView.vue'
+import AllOrder from '@/views/POS/AllOrder.vue'
 // import { component } from 'vue/types/umd'
 
 Vue.use(VueRouter)
@@ -33,6 +35,16 @@ const routes = [
         path: '/register',
         name: 'register',
         component: Register
+      },
+      {
+        path: '/pos',
+        name: 'pos',
+        component: Pos
+      },
+      {
+        path: '/orderAll',
+        name: 'orderAll',
+        component: AllOrder
       },
       {
         path:'/apicon',
